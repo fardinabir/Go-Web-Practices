@@ -32,15 +32,4 @@ func main() {
 	r.Post("/users", controllers.CreateUser)
 	r.Delete("/users/{id:[0-9]+}", controllers.DeleteUser)
 	log.Fatal(http.ListenAndServe(":8085", r))
-
-	//http.HandleFunc("/books", controllers.ReadBooks)
-	//http.HandleFunc("")
-
-	//r := gin.Default()
-	//r.GET("/books/:id", controllers.ReadBook)
-	//r.GET("/books", controllers.ReadBooks)
-	//r.POST("/books", controllers.CreateBook)
-	//r.PUT("/books/:id", controllers.UpdateBook)
-	//r.DELETE("/books/:id", controllers.DeleteBook)
-	//r.Run(":5000")
 }
