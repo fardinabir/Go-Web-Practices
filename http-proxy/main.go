@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func clientReq(w http.ResponseWriter) {
+func clientReq(w http.ResponseWriter, url string) {
 
 	tlsConfig := &tls.Config{
 		InsecureSkipVerify: true,
@@ -22,7 +22,6 @@ func clientReq(w http.ResponseWriter) {
 		IdleConnTimeout: 30 * time.Second,
 	}
 	client := &http.Client{Transport: transport}
-	url := "http://localhost:8085/users"
 	method := "GET"
 
 	payloadStr := fmt.Sprintf("test the req")
@@ -54,10 +53,19 @@ func clientReq2(w http.ResponseWriter, url string) {
 
 func handFunc(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Endpoint hit proxy........")
+	urlParam := r.URL.Query().Get("url")
+	decodedPath := decryptUrl(urlParam)
+	url := "http://localhost:8085" + decodedPath // decodedPath -> "/users/3"
 
-	//clientReq(w)
-	clientReq2(w, "http://localhost:8085/users")
+	if IsURL(url) == false {
+		fmt.Fprintf(w, "URL is not valid")
+		return
+	}
+	//clientReq(w, url)
+	clientReq2(w, url)
 }
+
+// demo get req at http://localhost:8088/?url=63SSTsNXVSjHVmApEfMkLHHVDkmZ2Nujor1ZbpWR3kuX5g8fCE5n31hYVmABgL1KxjEo1Ad8Ctq7V5JxyCeiUSR5x49zx9ZxPAFUSAjJSCLfnh1pyETcGoXtFqgQqwt8GJ5m244xsYDEApXUVJDHrwF3eF8qzZTnqKdxdZyfZYocsMX
 
 func main() {
 	fmt.Println("Starting proxy server....")
