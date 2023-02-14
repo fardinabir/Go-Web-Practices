@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"Go_CRUD_API/model"
 	"encoding/json"
 	"fmt"
 	"github.com/go-chi/chi/v5"
@@ -16,11 +17,11 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("On CreateUser........")
-	var tUser database.User
+	var tUser model.User
 	json.NewDecoder(r.Body).Decode(&tUser)
 
 	result := database.DB.Create(&tUser)
-	fmt.Println(tUser) // temp lineeeeeeeeeeeeee
+
 	if result.Error != nil {
 		fmt.Println("Can't create the requested : ", result.Error)
 		respondWithJSON(w, http.StatusInternalServerError, map[string]string{"message": "Server Error"})
@@ -35,7 +36,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 func ReadUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("On ReadUser..........")
-	var tUser database.User
+	var tUser model.User
 	id, _ := strconv.Atoi(chi.URLParam(r, "id"))
 
 	result := database.DB.First(&tUser, id)
@@ -49,7 +50,7 @@ func ReadUser(w http.ResponseWriter, r *http.Request) {
 
 func ReadUsers(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("On ReadUsers........")
-	var users []database.User
+	var users []model.User
 	result := database.DB.Find(&users)
 	if result.Error != nil {
 		fmt.Println("Users not found")
@@ -61,7 +62,7 @@ func ReadUsers(w http.ResponseWriter, r *http.Request) {
 
 func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("On DeleteUsers.......")
-	var tUser database.User
+	var tUser model.User
 	id, _ := strconv.Atoi(chi.URLParam(r, "id"))
 	result := database.DB.Delete(&tUser, id)
 	if result.Error != nil {

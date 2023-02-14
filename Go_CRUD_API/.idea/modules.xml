@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/Go_CRUD_API.iml" filepath="$PROJECT_DIR$/.idea/Go_CRUD_API.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../http-proxy/.idea/http-proxy.iml" filepath="$PROJECT_DIR$/../http-proxy/.idea/http-proxy.iml" />
     </modules>
   </component>
 </project>
