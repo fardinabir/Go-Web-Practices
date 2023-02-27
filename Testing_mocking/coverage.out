@@ -1,0 +1,4 @@
+mode: set
+Testing_mocking/test1.go:17.25,20.2 2 1
+Testing_mocking/test1.go:22.30,24.2 1 0
+Testing_mocking/test1.go:26.13,32.2 4 0
