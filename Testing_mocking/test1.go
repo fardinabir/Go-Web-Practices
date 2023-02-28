@@ -1,9 +1,10 @@
-package main
+package testingmocking
 
 import "fmt"
 
-type testIntfc interface {
-	add() int
+type Cal interface {
+	Add() int
+	Sub(int) int
 }
 
 type Obj struct {
@@ -14,19 +15,26 @@ type ObjThree struct {
 	x, y, z int
 }
 
-func (t *Obj) add() int {
-	//fmt.Printf("Invoked with x: %v, y:%v\n", t.x, t.y)
+func (t *Obj) Add() int {
+	fmt.Printf("Invoked with x: %v, y:%v\n", t.x, t.y)
 	return t.x + t.y
 }
 
-func (w *ObjThree) add() int {
+func (t *Obj) Sub(val int) int {
+	return val - 1
+}
+
+func (w *ObjThree) Add() int {
 	return w.x + w.y + w.z
 }
 
-func main() {
-	firstSt := Obj{3, 4}
-	secondSt := ObjThree{3, 4, 5}
-	fmt.Println(firstSt.add())
-	fmt.Println(secondSt.add())
+func Add(s Cal) int {
+	return s.Add()
+}
 
+func main() {
+	firstSt := Obj{x: 3, y: 4}
+	//secondSt := ObjThree{3, 4, 5}
+	fmt.Println(Add(&firstSt))
+	fmt.Println(firstSt.Sub(10))
 }
