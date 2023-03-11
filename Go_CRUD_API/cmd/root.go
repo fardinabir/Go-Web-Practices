@@ -19,17 +19,17 @@ var rootCmd = &cobra.Command{
 	Use:   "start",
 	Short: "A go crud api server",
 	Long:  `A go crud api server that allows login, registration with basic functionalities`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("This is root cmd")
-		loadFromConfig(cmd)
-		fmt.Println("this is form pf", viper.GetString(port))
+	Run:   runServ,
+}
 
-		portNow, _ := cmd.Flags().GetString("port")
-		fmt.Println(portNow)
-		server.StartServer(portNow)
-	},
+func runServ(cmd *cobra.Command, args []string) {
+	fmt.Println("This is root cmd")
+	loadFromConfig(cmd)
+	fmt.Println("this is form pf", viper.GetString(port))
+
+	portNow, _ := cmd.Flags().GetString("port")
+	fmt.Println(portNow)
+	server.StartServer(portNow)
 }
 
 func loadFromConfig(cmd *cobra.Command) {
@@ -55,7 +55,6 @@ func Execute() {
 }
 
 func init() {
-
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	rootCmd.Flags().StringP("port", "p", "3333", "Test string cmd")
 

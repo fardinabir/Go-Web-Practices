@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  app-db:
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=postgres
