@@ -3,7 +3,7 @@ version: '3.8'
 services:
   app-db:
     build:
-      dockerfile: Dockerfile
+      dockerfile: DockerfileDB
     ports:
       - "5433:5432"
     environment:
