@@ -1,8 +1,7 @@
 FROM golang:1.19 AS builder
 WORKDIR /app
-COPY go.* ./
-RUN go mod download
 COPY . .
+RUN go mod download
 RUN go build -o ./main
 #EXPOSE 8085
 
@@ -10,13 +9,20 @@ FROM postgres
 ENV POSTGRES_USER postgres
 ENV POSTGRES_PASSWORD 1234
 ENV POSTGRES_DB postgres
+ENV POSTGRES_HOST localhost
 #COPY dbsql.sql /docker-entrypoint-initdb.d/
 # Set the working directory in the container
 WORKDIR /app
 
 # Copy the built binary from the first stage into the second stage
-COPY --from=0 /app/ .
+COPY --from=0 /app/main .
+COPY --from=0 /app/config.yaml .
 EXPOSE 8085
 
-CMD ["./main"]
+#CMD ["./main"]
+
+
+
+## Run the Go server and connect to the PostgreSQL database
+#CMD ./main
 
