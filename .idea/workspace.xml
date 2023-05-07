@@ -5,14 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="97517c5b-8475-48be-ac46-711c702c9e02" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Go_CRUD_API/.idea/Go_CRUD_API.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Go_CRUD_API/.idea/Go_CRUD_API.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Go_CRUD_API/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Go_CRUD_API/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Go_CRUD_API/controllers/http.go" beforeDir="false" afterPath="$PROJECT_DIR$/Go_CRUD_API/controllers/http.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Go_CRUD_API/controllers/login.go" beforeDir="false" afterPath="$PROJECT_DIR$/Go_CRUD_API/controllers/login.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Go_CRUD_API/database/postgress.go" beforeDir="false" afterPath="$PROJECT_DIR$/Go_CRUD_API/database/postgress.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Go_CRUD_API/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/Go_CRUD_API/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Go_CRUD_API/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/Go_CRUD_API/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Go_CRUD_API/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/Go_CRUD_API/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Go_CRUD_API/cmd/root.go" beforeDir="false" afterPath="$PROJECT_DIR$/Go_CRUD_API/cmd/root.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/regestration/regestraion" beforeDir="false" afterPath="$PROJECT_DIR$/regestration/regestraion" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/regestration/regestraion/cmd/start.go" beforeDir="false" afterPath="$PROJECT_DIR$/regestration/regestraion/cmd/start.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/regestration/regestraion/config.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/regestration/regestraion/config.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/regestration/regestraion/controller/controller.go" beforeDir="false" afterPath="$PROJECT_DIR$/regestration/regestraion/controller/controller.go" afterDir="false" />
@@ -54,7 +49,7 @@
     "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
     "WebServerToolWindowFactoryState": "false",
     "go.import.settings.migrated": "true",
-    "last_opened_file_path": "/home/pathao",
+    "last_opened_file_path": "/home/pathao/PathaoPay/veritas/partners",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)"
   }
