@@ -41,7 +41,11 @@ func (c *Controller) CreateUser(w http.ResponseWriter, r *http.Request) {
 		response.JSONResponse(w)
 		return
 	}
-	tokenResp := model.Token{AccessToken: "this is access token", RefreshToken: "this is refresh token"}
+
+	// generating new token
+	accToken, err := newToken(payload.UserName, 10, "access")
+	refToken, err := newToken(payload.UserName, 15, "refresh")
+	tokenResp := model.Token{AccessToken: accToken, RefreshToken: refToken}
 	response := model.Response{Status: 500, Body: tokenResp}
 	response.JSONResponse(w)
 }

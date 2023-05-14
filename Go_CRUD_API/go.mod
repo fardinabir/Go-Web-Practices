@@ -5,6 +5,7 @@ go 1.19
 require (
 	github.com/alexedwards/argon2id v0.0.0-20211130144151-3585854a6387
 	github.com/go-chi/chi/v5 v5.0.8
+	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/spf13/cobra v1.6.1
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.15.0
