@@ -1,10 +1,10 @@
 package controllers
 
 import (
-	"Go_CRUD_API/model"
 	"encoding/json"
 	"fmt"
 	"github.com/alexedwards/argon2id"
+	"github.com/fardinabir/Go_CRUD_API/model"
 	"net/http"
 )
 
@@ -43,8 +43,8 @@ func (c *Controller) CreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// generating new token
-	accToken, err := newToken(payload.UserName, 10, "access")
-	refToken, err := newToken(payload.UserName, 15, "refresh")
+	accToken := newToken(payload.UserName, 10, "access")
+	refToken := newToken(payload.UserName, 15, "refresh")
 	tokenResp := model.Token{AccessToken: accToken, RefreshToken: refToken}
 	response := model.Response{Status: 500, Body: tokenResp}
 	response.JSONResponse(w)

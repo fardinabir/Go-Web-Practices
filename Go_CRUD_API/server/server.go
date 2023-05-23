@@ -1,8 +1,8 @@
 package server
 
 import (
-	"Go_CRUD_API/controllers"
-	"Go_CRUD_API/database"
+	"github.com/fardinabir/Go_CRUD_API/controllers"
+	"github.com/fardinabir/Go_CRUD_API/database"
 	"log"
 
 	"fmt"

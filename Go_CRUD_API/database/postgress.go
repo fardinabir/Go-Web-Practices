@@ -1,8 +1,8 @@
 package database
 
 import (
-	"Go_CRUD_API/model"
 	"fmt"
+	"github.com/fardinabir/Go_CRUD_API/model"
 	"github.com/spf13/viper"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"

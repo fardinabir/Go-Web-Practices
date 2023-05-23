@@ -8,7 +8,7 @@ import (
 
 var signSecretKey = []byte("fardinabir")
 
-func newToken(username string, expiry int, tokenType string) (string, error) {
+func newToken(username string, expiry int, tokenType string) string {
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
 
@@ -22,5 +22,5 @@ func newToken(username string, expiry int, tokenType string) (string, error) {
 		fmt.Errorf("Error while token signing", err.Error())
 	}
 
-	return signedToken, err
+	return signedToken
 }

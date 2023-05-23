@@ -1,8 +1,8 @@
 package main
 
 import (
-	"Go_CRUD_API/cmd"
 	"fmt"
+	"github.com/fardinabir/Go_CRUD_API/cmd"
 )
 
 func main() {

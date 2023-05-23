@@ -4,20 +4,16 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="97517c5b-8475-48be-ac46-711c702c9e02" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Go_CRUD_API/.idea/Go_CRUD_API.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Go_CRUD_API/.idea/Go_CRUD_API.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Go_CRUD_API/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Go_CRUD_API/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Go_CRUD_API/controllers/http.go" beforeDir="false" afterPath="$PROJECT_DIR$/Go_CRUD_API/controllers/http.go" afterDir="false" />
+    <list default="true" id="146bc7ce-81f6-4ee7-b712-29e9db227520" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/fardinabir.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Go_CRUD_API/controllers/login.go" beforeDir="false" afterPath="$PROJECT_DIR$/Go_CRUD_API/controllers/login.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Go_CRUD_API/database/postgress.go" beforeDir="false" afterPath="$PROJECT_DIR$/Go_CRUD_API/database/postgress.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Go_CRUD_API/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/Go_CRUD_API/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Go_CRUD_API/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/Go_CRUD_API/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Go_CRUD_API/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/Go_CRUD_API/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/regestration/regestraion/cmd/start.go" beforeDir="false" afterPath="$PROJECT_DIR$/regestration/regestraion/cmd/start.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/regestration/regestraion/config.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/regestration/regestraion/config.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/regestration/regestraion/controller/controller.go" beforeDir="false" afterPath="$PROJECT_DIR$/regestration/regestraion/controller/controller.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/regestration/regestraion/controller/login.go" beforeDir="false" afterPath="$PROJECT_DIR$/regestration/regestraion/controller/login.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/regestration/regestraion/database.sql" beforeDir="false" afterPath="$PROJECT_DIR$/regestration/regestraion/database.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Go_CRUD_API/controllers/reg.go" beforeDir="false" afterPath="$PROJECT_DIR$/Go_CRUD_API/controllers/reg.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Go_CRUD_API/controllers/token_generator.go" beforeDir="false" afterPath="$PROJECT_DIR$/Go_CRUD_API/controllers/token_generator.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST_User_Store/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/REST_User_Store/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-access/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/user-access/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,7 +34,7 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectId" id="2LgxriiY8eI7ZuesyeBK7Y08Y57" />
+  <component name="ProjectId" id="2Q8StluQqzAhC9zvYw6uOfIhHeO" />
   <component name="ProjectViewState">
     <option name="autoscrollFromSource" value="true" />
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -47,7 +43,6 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "DefaultGoTemplateProperty": "Go File",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.go.formatter.settings.were.checked": "true",
     "RunOnceActivity.go.migrated.go.modules.settings": "true",

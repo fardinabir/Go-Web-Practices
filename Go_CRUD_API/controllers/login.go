@@ -1,47 +1,40 @@
 package controllers
 
 import (
-	"Go_CRUD_API/model"
 	"encoding/json"
 	"fmt"
 	"github.com/alexedwards/argon2id"
+	"github.com/fardinabir/Go_CRUD_API/model"
 	"net/http"
 )
 
 func (c *Controller) Login(w http.ResponseWriter, r *http.Request) {
 	var payload, userDb model.User
-	response := model.Response{Status: 500, Body: "Problem with Internal Server"}
-	fmt.Println("This is Login....")
 	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
-		fmt.Println(err)
-		response.JSONResponse(w)
+		ErrInternalServerError.ErrorResponse().JSONResponse(w)
 		return
 	}
 	fmt.Println("This is payload", payload)
 	err := c.DB.Where("user_name = ?", payload.UserName).First(&userDb).Error
 	if err != nil {
 		fmt.Println(err)
-		response.JSONResponse(w)
+		ErrUserNotFound.ErrorResponse().JSONResponse(w)
 		return
 	}
 
 	ok, err := argon2id.ComparePasswordAndHash(payload.Password, userDb.Password)
 
 	if err != nil {
-		response := model.Response{Status: 500, Body: "Wrong Password"}
-		response.JSONResponse(w)
+		ErrWrongPassword.ErrorResponse().JSONResponse(w)
 		return
 	}
 
-	if ok {
-
-		tokenResp := model.Token{"this is access token", "this is refresh token"}
-		response = model.Response{200, tokenResp}
-		response.JSONResponse(w)
+	if ok { // generating new token
+		accToken := newToken(payload.UserName, 10, "access")
+		refToken := newToken(payload.UserName, 15, "refresh")
+		tokenResp := model.Token{AccessToken: accToken, RefreshToken: refToken}
+		resp := &model.Response{Status: 200, Body: tokenResp}
+		resp.JSONResponse(w)
 	}
-
-}
-
-func newFunc() {
 
 }

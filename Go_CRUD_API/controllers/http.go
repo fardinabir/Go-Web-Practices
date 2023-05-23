@@ -1,14 +1,14 @@
 package controllers
 
 import (
-	"Go_CRUD_API/model"
 	"encoding/json"
 	"fmt"
+	"github.com/fardinabir/Go_CRUD_API/model"
 	"github.com/go-chi/chi/v5"
 	"net/http"
 	"strconv"
 
-	"Go_CRUD_API/database"
+	"github.com/fardinabir/Go_CRUD_API/database"
 )
 
 func HomePage(w http.ResponseWriter, r *http.Request) {

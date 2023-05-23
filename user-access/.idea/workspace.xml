@@ -5,11 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6e9f1540-b448-4345-894e-a9594522dd77" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../Go_CRUD_API/DockerfileDB" beforeDir="false" afterPath="$PROJECT_DIR$/../Go_CRUD_API/DockerfileDB" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Go_CRUD_API/DockerfileServer" beforeDir="false" afterPath="$PROJECT_DIR$/../Go_CRUD_API/DockerfileServer" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Go_CRUD_API/config.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../Go_CRUD_API/config.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Go_CRUD_API/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../Go_CRUD_API/docker-compose.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../regestration/regestraion" beforeDir="false" afterPath="$PROJECT_DIR$/../regestration/regestraion" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../REST_User_Store/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../REST_User_Store/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,7 +65,7 @@
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
     &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/pathao/go/src/github.com/fardinabir/user-access&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/pathao/go/src/github.com/testProject&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode.Go&quot;
