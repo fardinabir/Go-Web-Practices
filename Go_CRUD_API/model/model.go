@@ -2,6 +2,7 @@ package model
 
 import (
 	"encoding/json"
+	"github.com/golang-jwt/jwt"
 	"gorm.io/gorm"
 	"net/http"
 )
@@ -10,7 +11,7 @@ type User struct {
 	gorm.Model
 	UserName string `json:"userName"`
 	MobileNo string `json:"mobileNo"`
-	Password string `json:"password"`
+	Password string `json:"password,omitempty"`
 }
 
 type UserLogin struct {
@@ -25,6 +26,14 @@ type Error struct {
 type Token struct {
 	AccessToken  string `json:"accessToken"`
 	RefreshToken string `json:"refreshToken"`
+}
+
+type TokenDetails struct {
+	Authorized bool        `json:"authorized"`
+	TokenType  string      `json:"tokenType"`
+	UserName   string      `json:"userName"`
+	Expiry     interface{} `json:"expiry"`
+	jwt.StandardClaims
 }
 
 type Response struct {

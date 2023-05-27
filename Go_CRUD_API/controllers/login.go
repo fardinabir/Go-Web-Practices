@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/alexedwards/argon2id"
 	"github.com/fardinabir/Go_CRUD_API/model"
+	"log"
 	"net/http"
 )
 
@@ -14,7 +15,7 @@ func (c *Controller) Login(w http.ResponseWriter, r *http.Request) {
 		ErrInternalServerError.ErrorResponse().JSONResponse(w)
 		return
 	}
-	fmt.Println("This is payload", payload)
+	log.Print("This is payload", payload)
 	err := c.DB.Where("user_name = ?", payload.UserName).First(&userDb).Error
 	if err != nil {
 		fmt.Println(err)
@@ -30,7 +31,7 @@ func (c *Controller) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if ok { // generating new token
-		accToken := newToken(payload.UserName, 10, "access")
+		accToken := newToken(payload.UserName, 1, "access")
 		refToken := newToken(payload.UserName, 15, "refresh")
 		tokenResp := model.Token{AccessToken: accToken, RefreshToken: refToken}
 		resp := &model.Response{Status: 200, Body: tokenResp}

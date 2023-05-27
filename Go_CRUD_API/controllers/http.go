@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/fardinabir/Go_CRUD_API/model"
+	"github.com/fardinabir/Go_CRUD_API/service"
 	"github.com/go-chi/chi/v5"
 	"net/http"
 	"strconv"
@@ -12,6 +13,13 @@ import (
 )
 
 func HomePage(w http.ResponseWriter, r *http.Request) {
+	headerToken := service.GetHeaderValue(r, "Authorization")
+	token, err := validateToken(headerToken)
+	if err != nil {
+		ErrUnauthorizedReq.ErrorResponse().JSONResponse(w)
+		return
+	}
+	fmt.Println(token)
 	fmt.Fprintf(w, "hello, this is the homepage")
 }
 

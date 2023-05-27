@@ -11,6 +11,10 @@ type ErrorObj struct {
 	Message string
 }
 
+func (e *ErrorObj) Error() string {
+	return e.Message
+}
+
 var (
 	ErrUserAlreadyExists        = &ErrorObj{Code: "UA409", Status: http.StatusConflict, Message: "User already exists"}
 	ErrUserNotEligible          = &ErrorObj{Code: "UA401", Status: http.StatusConflict, Message: "User is not eligible for registration"}
@@ -30,6 +34,7 @@ var (
 	ErrPayloadTooLarge     = &ErrorObj{Code: "UA413", Status: http.StatusRequestEntityTooLarge, Message: "Payload size too large"}
 	ErrTooManyRequest      = &ErrorObj{Code: "UA429", Status: http.StatusTooManyRequests, Message: "Too many request"}
 	ErrInternalServerError = &ErrorObj{Code: "UA500", Status: http.StatusInternalServerError, Message: "Internal server error"}
+	ErrUnauthorizedReq     = &ErrorObj{Code: "UA401", Status: http.StatusUnauthorized, Message: "Unauthorized Access"}
 
 	ErrUserNotFound  = &ErrorObj{Code: "UA404", Status: http.StatusNotFound, Message: "User not found"}
 	ErrWrongPassword = &ErrorObj{Code: "UA401", Status: http.StatusUnauthorized, Message: "Wrong user credentials"}
