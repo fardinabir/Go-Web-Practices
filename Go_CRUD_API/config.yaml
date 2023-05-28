@@ -4,5 +4,12 @@ database:
   user: postgres
   password: 1234
   dbname: postgres
+
 server:
   port: 8085
+
+auth:
+  secret_key: "fardinabir"
+  expiry:
+    access_token: 2
+    refresh_token: 4

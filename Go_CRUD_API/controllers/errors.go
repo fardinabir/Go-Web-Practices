@@ -27,7 +27,7 @@ var (
 	ErrMerchantNotFound    = &ErrorObj{Code: "UA404", Status: http.StatusNotFound, Message: "Merchant not found"}
 	ErrAccountNotActive    = &ErrorObj{Code: "UA422", Status: http.StatusUnprocessableEntity, Message: "Account not activated"}
 	ErrInvalidToken        = &ErrorObj{Code: "UA422", Status: http.StatusUnprocessableEntity, Message: "Invalid token"}
-	ErrTokenExpired        = &ErrorObj{Code: "UA410", Status: http.StatusGone, Message: "Token is expired"}
+	ErrTokenExpired        = &ErrorObj{Code: "UA410", Status: http.StatusGone, Message: "Tokens is expired"}
 	ErrURINotFound         = &ErrorObj{Code: "UA404", Status: http.StatusNotFound, Message: "URL not found"}
 	ErrMethodNotAllowed    = &ErrorObj{Code: "UA405", Status: http.StatusMethodNotAllowed, Message: "Method not allowed"}
 	ErrInvalidData         = &ErrorObj{Code: "UA422", Status: http.StatusUnprocessableEntity, Message: "Invalid data"}

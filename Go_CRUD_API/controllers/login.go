@@ -31,9 +31,8 @@ func (c *Controller) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if ok { // generating new token
-		accToken := newToken(payload.UserName, 1, "access")
-		refToken := newToken(payload.UserName, 15, "refresh")
-		tokenResp := model.Token{AccessToken: accToken, RefreshToken: refToken}
+		jwtAuth := newTokenAuth()
+		tokenResp := jwtAuth.generateTokens(payload.UserName)
 		resp := &model.Response{Status: 200, Body: tokenResp}
 		resp.JSONResponse(w)
 	}

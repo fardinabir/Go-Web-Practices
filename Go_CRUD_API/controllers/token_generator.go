@@ -4,22 +4,41 @@ import (
 	"fmt"
 	"github.com/fardinabir/Go_CRUD_API/model"
 	"github.com/golang-jwt/jwt"
+	"github.com/spf13/viper"
 	"log"
 	"time"
 )
 
-var signSecretKey = []byte("fardinabir")
+type TokenAuth struct {
+	SignSecretKey []byte
+	ExpiryAccess  time.Duration
+	ExpiryRefresh time.Duration
+}
 
-func newToken(username string, expiry int, tokenType string) string {
+func newTokenAuth() *TokenAuth {
+	return &TokenAuth{
+		SignSecretKey: []byte(viper.GetString("auth.secret_key")),
+		ExpiryAccess:  viper.GetDuration("auth.expiry.access_token"),
+		ExpiryRefresh: viper.GetDuration("auth.expiry.refresh_token"),
+	}
+}
+
+func (t *TokenAuth) generateTokens(userName string) model.Token {
+	accToken := t.newToken(userName, t.ExpiryAccess, "access")
+	refToken := t.newToken(userName, t.ExpiryRefresh, "refresh")
+	return model.Token{accToken, refToken}
+}
+
+func (t *TokenAuth) newToken(username string, expiry time.Duration, tokenType string) string {
 	token := jwt.New(jwt.SigningMethodHS256)
 	token.Claims = model.TokenDetails{
 		Authorized: true,
 		TokenType:  tokenType,
 		UserName:   username,
-		Expiry:     time.Now().Add(time.Minute * time.Duration(expiry)).Unix(),
+		Expiry:     time.Now().Add(time.Minute * expiry).Unix(),
 	}
 
-	signedToken, err := token.SignedString(signSecretKey)
+	signedToken, err := token.SignedString(t.SignSecretKey)
 	if err != nil {
 		fmt.Errorf("error while token signing", err.Error())
 	}
@@ -31,17 +50,18 @@ func validateToken(token string) (jwt.MapClaims, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, ErrUnauthorizedReq
 		}
-		return signSecretKey, nil
+		signSecret := []byte(viper.GetString("auth.secret_key"))
+		return signSecret, nil
 	})
 	claims := parsedToken.Claims.(jwt.MapClaims)
 
 	if ok := parsedToken.Valid; !ok {
-		log.Println("Invalid Token")
+		log.Println("Invalid Tokens")
 		return nil, ErrInvalidToken
 	}
 	exp := int64(claims["expiry"].(float64))
 	if time.Now().After(time.Unix(exp, 0)) {
-		log.Println("Token Expired")
+		log.Println("Tokens Expired")
 		return nil, ErrTokenExpired
 	}
 	return claims, nil
