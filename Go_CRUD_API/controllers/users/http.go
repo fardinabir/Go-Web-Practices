@@ -1,62 +1,44 @@
-package controllers
+package users
 
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/fardinabir/Go_CRUD_API/controllers"
 	"github.com/fardinabir/Go_CRUD_API/model"
 	"github.com/fardinabir/Go_CRUD_API/service"
 	"github.com/go-chi/chi/v5"
+	"log"
 	"net/http"
 	"strconv"
 
 	"github.com/fardinabir/Go_CRUD_API/database"
 )
 
-func HomePage(w http.ResponseWriter, r *http.Request) {
+func (rs *UserResource) HomePage(w http.ResponseWriter, r *http.Request) {
 	headerToken := service.GetHeaderValue(r, "Authorization")
-	token, err := validateToken(headerToken)
+	token, err := controllers.ValidateToken(headerToken)
 	if err != nil {
-		ErrUnauthorizedReq.ErrorResponse().JSONResponse(w)
+		controllers.ErrUnauthorizedReq.ErrorResponse().JSONResponse(w)
 		return
 	}
 	fmt.Println(token)
 	fmt.Fprintf(w, "hello, this is the homepage")
 }
 
-func CreateUser(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("On CreateUser........")
-	var tUser model.User
-	json.NewDecoder(r.Body).Decode(&tUser)
-
-	result := database.DB.Create(&tUser)
-
-	if result.Error != nil {
-		fmt.Println("Can't create the requested : ", result.Error)
-		respondWithJSON(w, http.StatusInternalServerError, map[string]string{"message": "Server Error"})
-		return
-	}
-	respondWithJSON(w, http.StatusCreated, map[string]string{
-		"message":  "Created Successfully",
-		"UserName": tUser.UserName,
-		"id":       string(tUser.ID),
-	})
-}
-
-func ReadUser(w http.ResponseWriter, r *http.Request) {
+func (rs *UserResource) ReadUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("On ReadUser..........")
-	var tUser model.User
 	id, _ := strconv.Atoi(chi.URLParam(r, "id"))
 
-	result := database.DB.First(&tUser, id)
-	if result.Error != nil {
-		fmt.Println("Can't find the requested : ", result.Error)
-		respondWithJSON(w, http.StatusInternalServerError, map[string]string{"message": "Server Error"})
+	res, err := rs.Users.GetUserById(id)
+	if err != nil {
+		log.Println("Can't find the requested : ", err.Error)
+		controllers.ErrUserNotFound.ErrorResponse().JSONResponse(w)
 		return
 	}
-	respondWithJSON(w, http.StatusOK, tUser)
+	respondWithJSON(w, http.StatusOK, res)
 }
 
-func ReadUsers(w http.ResponseWriter, r *http.Request) {
+func (rs *UserResource) ReadUsers(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("On ReadUsers........")
 	var users []model.User
 	result := database.DB.Find(&users)
@@ -68,7 +50,7 @@ func ReadUsers(w http.ResponseWriter, r *http.Request) {
 	respondWithJSON(w, http.StatusOK, users)
 }
 
-func DeleteUser(w http.ResponseWriter, r *http.Request) {
+func (rs *UserResource) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("On DeleteUsers.......")
 	var tUser model.User
 	id, _ := strconv.Atoi(chi.URLParam(r, "id"))

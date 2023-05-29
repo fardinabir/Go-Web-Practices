@@ -25,10 +25,9 @@ var rootCmd = &cobra.Command{
 func runServ(cmd *cobra.Command, args []string) {
 	fmt.Println("This is root cmd")
 	loadFromConfig(cmd)
-	fmt.Println("this is form pf", viper.GetString(port))
+	fmt.Println("this is pFlag-Viper", viper.GetString("port"))
 
 	portNow, _ := cmd.Flags().GetString("port")
-	fmt.Println(portNow)
 	server.StartServer(portNow)
 }
 
@@ -38,7 +37,7 @@ func loadFromConfig(cmd *cobra.Command) {
 		if !f.Changed {
 			val := viper.GetString("server." + f.Name) // as they are under sever tag in config file
 			if val != "" {                             // checks if config file contains value for the flag
-				fmt.Println(f.Name, " ", val)
+				fmt.Println("This is from config : ", f.Name, " ", val)
 				cmd.Flags().Set(f.Name, fmt.Sprintf("%v", val))
 			}
 		}
@@ -63,5 +62,6 @@ func init() {
 	if err := viper.ReadInConfig(); err != nil {
 		fmt.Println("Error reading config file, ", err)
 	}
+
 	viper.BindPFlag("port", rootCmd.Flags().Lookup("port"))
 }

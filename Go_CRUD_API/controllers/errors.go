@@ -35,6 +35,7 @@ var (
 	ErrTooManyRequest      = &ErrorObj{Code: "UA429", Status: http.StatusTooManyRequests, Message: "Too many request"}
 	ErrInternalServerError = &ErrorObj{Code: "UA500", Status: http.StatusInternalServerError, Message: "Internal server error"}
 	ErrUnauthorizedReq     = &ErrorObj{Code: "UA401", Status: http.StatusUnauthorized, Message: "Unauthorized Access"}
+	ErrFailedToCreate      = &ErrorObj{Code: "UA500", Status: http.StatusInternalServerError, Message: "Failed to create the requested"}
 
 	ErrUserNotFound  = &ErrorObj{Code: "UA404", Status: http.StatusNotFound, Message: "User not found"}
 	ErrWrongPassword = &ErrorObj{Code: "UA401", Status: http.StatusUnauthorized, Message: "Wrong user credentials"}

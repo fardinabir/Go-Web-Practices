@@ -15,7 +15,7 @@ type TokenAuth struct {
 	ExpiryRefresh time.Duration
 }
 
-func newTokenAuth() *TokenAuth {
+func NewTokenAuth() *TokenAuth {
 	return &TokenAuth{
 		SignSecretKey: []byte(viper.GetString("auth.secret_key")),
 		ExpiryAccess:  viper.GetDuration("auth.expiry.access_token"),
@@ -23,7 +23,7 @@ func newTokenAuth() *TokenAuth {
 	}
 }
 
-func (t *TokenAuth) generateTokens(userName string) model.Token {
+func (t *TokenAuth) GenerateTokens(userName string) model.Token {
 	accToken := t.newToken(userName, t.ExpiryAccess, "access")
 	refToken := t.newToken(userName, t.ExpiryRefresh, "refresh")
 	return model.Token{accToken, refToken}
@@ -45,7 +45,7 @@ func (t *TokenAuth) newToken(username string, expiry time.Duration, tokenType st
 	return signedToken
 }
 
-func validateToken(token string) (jwt.MapClaims, error) {
+func ValidateToken(token string) (jwt.MapClaims, error) {
 	parsedToken, _ := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, ErrUnauthorizedReq

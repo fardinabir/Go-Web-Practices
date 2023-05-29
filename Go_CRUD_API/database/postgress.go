@@ -12,11 +12,7 @@ import (
 var DB *gorm.DB
 var err error
 
-func loadFromYaml() string {
-	viper.SetConfigFile("config.yaml")
-	if err := viper.ReadInConfig(); err != nil {
-		fmt.Println("Error reading config file, ", err)
-	}
+func loadConfig() string {
 	host := viper.GetString("database.host")
 	port := viper.GetString("database.port")
 	user := viper.GetString("database.user")
@@ -28,7 +24,7 @@ func loadFromYaml() string {
 }
 
 func DatabaseConnection() *gorm.DB {
-	dsn := loadFromYaml()
+	dsn := loadConfig()
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	DB.AutoMigrate(model.User{})
 	if err != nil {
