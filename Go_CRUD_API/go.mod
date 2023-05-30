@@ -1,4 +1,4 @@
-module github.com/fardinabir/Go_CRUD_API
+module Go_CRUD_API
 
 go 1.19
 

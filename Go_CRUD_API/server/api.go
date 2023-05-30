@@ -1,7 +1,7 @@
 package server
 
 import (
-	"github.com/fardinabir/Go_CRUD_API/controllers/users"
+	"Go_CRUD_API/controllers/users"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )

@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"github.com/fardinabir/Go_CRUD_API/model"
+	"Go_CRUD_API/model"
 	"net/http"
 )
 

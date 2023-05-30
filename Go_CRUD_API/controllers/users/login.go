@@ -1,10 +1,10 @@
 package users
 
 import (
+	"Go_CRUD_API/controllers"
+	"Go_CRUD_API/model"
 	"encoding/json"
 	"github.com/alexedwards/argon2id"
-	"github.com/fardinabir/Go_CRUD_API/controllers"
-	"github.com/fardinabir/Go_CRUD_API/model"
 	"log"
 	"net/http"
 )

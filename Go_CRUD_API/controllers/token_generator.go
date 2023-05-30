@@ -1,8 +1,8 @@
 package controllers
 
 import (
+	"Go_CRUD_API/model"
 	"fmt"
-	"github.com/fardinabir/Go_CRUD_API/model"
 	"github.com/golang-jwt/jwt"
 	"github.com/spf13/viper"
 	"log"
@@ -46,6 +46,11 @@ func (t *TokenAuth) newToken(username string, expiry time.Duration, tokenType st
 }
 
 func ValidateToken(token string) (jwt.MapClaims, error) {
+	if token == "" {
+		log.Println("Empty token found")
+		return nil, ErrInvalidToken
+	}
+
 	parsedToken, _ := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, ErrUnauthorizedReq

@@ -1,17 +1,15 @@
 package users
 
 import (
+	"Go_CRUD_API/controllers"
+	"Go_CRUD_API/model"
+	"Go_CRUD_API/service"
 	"encoding/json"
 	"fmt"
-	"github.com/fardinabir/Go_CRUD_API/controllers"
-	"github.com/fardinabir/Go_CRUD_API/model"
-	"github.com/fardinabir/Go_CRUD_API/service"
 	"github.com/go-chi/chi/v5"
 	"log"
 	"net/http"
 	"strconv"
-
-	"github.com/fardinabir/Go_CRUD_API/database"
 )
 
 func (rs *UserResource) HomePage(w http.ResponseWriter, r *http.Request) {
@@ -21,14 +19,21 @@ func (rs *UserResource) HomePage(w http.ResponseWriter, r *http.Request) {
 		controllers.ErrUnauthorizedReq.ErrorResponse().JSONResponse(w)
 		return
 	}
-	fmt.Println(token)
+	log.Println(token)
 	fmt.Fprintf(w, "hello, this is the homepage")
 }
 
 func (rs *UserResource) ReadUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("On ReadUser..........")
-	id, _ := strconv.Atoi(chi.URLParam(r, "id"))
+	headerToken := service.GetHeaderValue(r, "Authorization")
+	token, err := controllers.ValidateToken(headerToken)
+	if err != nil {
+		controllers.ErrUnauthorizedReq.ErrorResponse().JSONResponse(w)
+		return
+	}
+	log.Println(token)
 
+	id, _ := strconv.Atoi(chi.URLParam(r, "id"))
 	res, err := rs.Users.GetUserById(id)
 	if err != nil {
 		log.Println("Can't find the requested : ", err.Error)
@@ -40,9 +45,17 @@ func (rs *UserResource) ReadUser(w http.ResponseWriter, r *http.Request) {
 
 func (rs *UserResource) ReadUsers(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("On ReadUsers........")
-	var users []model.User
-	result := database.DB.Find(&users)
-	if result.Error != nil {
+	headerToken := service.GetHeaderValue(r, "Authorization")
+	token, err := controllers.ValidateToken(headerToken)
+	if err != nil {
+		controllers.ErrUnauthorizedReq.ErrorResponse().JSONResponse(w)
+		return
+	}
+	log.Println(token)
+
+	qry := map[string]interface{}{}
+	users, err := rs.Users.GetUsers(qry) //database.DB.Find(&users)
+	if err != nil {
 		fmt.Println("Users not found")
 		respondWithJSON(w, http.StatusInternalServerError, map[string]string{"message": "Server Error"})
 		return
@@ -50,15 +63,52 @@ func (rs *UserResource) ReadUsers(w http.ResponseWriter, r *http.Request) {
 	respondWithJSON(w, http.StatusOK, users)
 }
 
-func (rs *UserResource) DeleteUser(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("On DeleteUsers.......")
-	var tUser model.User
-	id, _ := strconv.Atoi(chi.URLParam(r, "id"))
-	result := database.DB.Delete(&tUser, id)
-	if result.Error != nil {
-		fmt.Println("Delete failed, users not found")
+func (rs *UserResource) UpdateUser(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("On UpdateUser.......")
+	headerToken := service.GetHeaderValue(r, "Authorization")
+	token, err := controllers.ValidateToken(headerToken)
+	if err != nil {
+		controllers.ErrUnauthorizedReq.ErrorResponse().JSONResponse(w)
 		return
 	}
+	log.Println(token)
+
+	var payload model.User
+	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
+		controllers.ErrInternalServerError.ErrorResponse().JSONResponse(w)
+		return
+	}
+
+	id, _ := strconv.Atoi(chi.URLParam(r, "id"))
+	usr, err := rs.Users.UpdateById(id, &payload)
+	if err != nil {
+		log.Println("Update failed...", err)
+		controllers.ErrInternalServerError.ErrorResponse().JSONResponse(w)
+		return
+	}
+	log.Println("User Updated : ", usr)
+	respondWithJSON(w, http.StatusOK, map[string]string{
+		"message": "Updated Successfully"})
+}
+
+func (rs *UserResource) DeleteUser(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("On DeleteUsers.......")
+	headerToken := service.GetHeaderValue(r, "Authorization")
+	token, err := controllers.ValidateToken(headerToken)
+	if err != nil {
+		controllers.ErrUnauthorizedReq.ErrorResponse().JSONResponse(w)
+		return
+	}
+	log.Println(token)
+
+	id, _ := strconv.Atoi(chi.URLParam(r, "id"))
+	usr, err := rs.Users.Delete(id)
+	if err != nil {
+		fmt.Println("Delete failed, users not found")
+		controllers.ErrUserNotFound.ErrorResponse().JSONResponse(w)
+		return
+	}
+	log.Println("User Deleted : ", usr)
 	respondWithJSON(w, http.StatusOK, map[string]string{
 		"message": "Deleted Successfully"})
 }
