@@ -24,6 +24,10 @@ func loadConfig() string {
 }
 
 func DatabaseConnection() *gorm.DB {
+	if DB != nil {
+		return DB
+	}
+
 	dsn := loadConfig()
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	DB.AutoMigrate(model.User{})

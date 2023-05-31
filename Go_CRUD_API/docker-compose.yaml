@@ -21,5 +21,12 @@ services:
       - "8085:8085"
     depends_on:
       - app-db
+  redis:
+    image: redis:latest
+    volumes:
+      - data:/data
+    ports:
+      - 6379:6379
 volumes:
   dbdata:
+  data:

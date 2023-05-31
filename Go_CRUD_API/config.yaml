@@ -13,3 +13,8 @@ auth:
   expiry:
     access_token: 2
     refresh_token: 4
+
+redis:
+  host: localhost
+  port: 55000
+  password: "redispw"
