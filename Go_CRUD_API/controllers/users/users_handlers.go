@@ -2,15 +2,96 @@ package users
 
 import (
 	"Go_CRUD_API/controllers"
+	"Go_CRUD_API/database"
 	"Go_CRUD_API/model"
 	"Go_CRUD_API/service"
 	"encoding/json"
 	"fmt"
+	"github.com/alexedwards/argon2id"
 	"github.com/go-chi/chi/v5"
 	"log"
 	"net/http"
 	"strconv"
+	"time"
 )
+
+func (rs *UserResource) CreateUser(w http.ResponseWriter, r *http.Request) {
+	var payload model.User
+	fmt.Println("This is CreateUser....")
+	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
+		controllers.ErrInternalServerError.ErrorResponse().JSONResponse(w)
+		return
+	}
+	_, err := rs.Users.GetUserByName(payload.UserName)
+	if err == nil {
+		controllers.ErrUserAlreadyExists.ErrorResponse().JSONResponse(w)
+		return
+	}
+
+	hashPassword, err := argon2id.CreateHash(payload.Password, argon2id.DefaultParams)
+	if err != nil {
+		controllers.ErrInternalServerError.ErrorResponse().JSONResponse(w)
+		return
+	}
+	payload.Password = hashPassword
+
+	err = rs.Users.Create(&payload)
+	if err != nil {
+		fmt.Println("Can't create the requested : ", err.Error())
+		controllers.ErrFailedToCreate.ErrorResponse().JSONResponse(w)
+		return
+	}
+
+	// generating new token
+	jwtAuth := controllers.NewTokenAuth()
+	tokenResp := jwtAuth.GenerateTokens(payload.UserName)
+	resp := &model.Response{Status: 200, Body: tokenResp}
+	resp.JSONResponse(w)
+}
+
+func (rs *UserResource) Login(w http.ResponseWriter, r *http.Request) {
+	var payload model.User
+	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
+		controllers.ErrInternalServerError.ErrorResponse().JSONResponse(w)
+		return
+	}
+	log.Print("This is payload", payload)
+
+	// rate limiter using redis
+	rcl, err := database.RedisConnection()
+	if err != nil {
+		controllers.ErrInternalServerError.ErrorResponse().JSONResponse(w)
+		return
+	}
+
+	rateLimitStatus, err := service.RateLimitCheckShort(payload.UserName, 3, time.Second*20, rcl)
+	if rateLimitStatus == false {
+		fmt.Println("---------------------Found Redis Entry ------------------------")
+		controllers.ErrTooManyRequest.ErrorResponse().JSONResponse(w)
+		return
+	}
+
+	userDb, err := rs.Users.GetUserByName(payload.UserName)
+	if err != nil {
+		controllers.ErrUserNotFound.ErrorResponse().JSONResponse(w)
+		return
+	}
+
+	ok, err := argon2id.ComparePasswordAndHash(payload.Password, userDb.Password)
+
+	if err != nil {
+		controllers.ErrWrongPassword.ErrorResponse().JSONResponse(w)
+		return
+	}
+
+	if ok { // generating new token
+		jwtAuth := controllers.NewTokenAuth()
+		tokenResp := jwtAuth.GenerateTokens(payload.UserName)
+		resp := &model.Response{Status: 200, Body: tokenResp}
+		resp.JSONResponse(w)
+	}
+
+}
 
 func (rs *UserResource) HomePage(w http.ResponseWriter, r *http.Request) {
 	headerToken := service.GetHeaderValue(r, "Authorization")
@@ -40,7 +121,7 @@ func (rs *UserResource) ReadUser(w http.ResponseWriter, r *http.Request) {
 		controllers.ErrUserNotFound.ErrorResponse().JSONResponse(w)
 		return
 	}
-	respondWithJSON(w, http.StatusOK, res)
+	service.RespondWithJSON(w, http.StatusOK, res)
 }
 
 func (rs *UserResource) ReadUsers(w http.ResponseWriter, r *http.Request) {
@@ -57,10 +138,10 @@ func (rs *UserResource) ReadUsers(w http.ResponseWriter, r *http.Request) {
 	users, err := rs.Users.GetUsers(qry) //database.DB.Find(&users)
 	if err != nil {
 		fmt.Println("Users not found")
-		respondWithJSON(w, http.StatusInternalServerError, map[string]string{"message": "Server Error"})
+		service.RespondWithJSON(w, http.StatusInternalServerError, map[string]string{"message": "Server Error"})
 		return
 	}
-	respondWithJSON(w, http.StatusOK, users)
+	service.RespondWithJSON(w, http.StatusOK, users)
 }
 
 func (rs *UserResource) UpdateUser(w http.ResponseWriter, r *http.Request) {
@@ -87,7 +168,7 @@ func (rs *UserResource) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	log.Println("User Updated : ", usr)
-	respondWithJSON(w, http.StatusOK, map[string]string{
+	service.RespondWithJSON(w, http.StatusOK, map[string]string{
 		"message": "Updated Successfully"})
 }
 
@@ -109,14 +190,6 @@ func (rs *UserResource) DeleteUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	log.Println("User Deleted : ", usr)
-	respondWithJSON(w, http.StatusOK, map[string]string{
+	service.RespondWithJSON(w, http.StatusOK, map[string]string{
 		"message": "Deleted Successfully"})
-}
-
-func respondWithJSON(w http.ResponseWriter, status int, payload interface{}) {
-	response, _ := json.Marshal(payload)
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(status)
-	w.Write(response)
 }

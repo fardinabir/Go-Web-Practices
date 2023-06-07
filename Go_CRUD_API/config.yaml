@@ -1,5 +1,5 @@
 database:
-  host: localhost #app-db
+  host: localhost #app-db  # # #
   port: 5432
   user: postgres
   password: 1234
@@ -15,6 +15,6 @@ auth:
     refresh_token: 4
 
 redis:
-  host: localhost
-  port: 55000
-  password: "redispw"
+  host: localhost #redis #
+  port: 6379
+#  password: "redispw"
