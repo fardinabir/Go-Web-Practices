@@ -1,6 +1,7 @@
 package service
 
 import (
+	"Go_CRUD_API/database"
 	"errors"
 	"fmt"
 	"github.com/go-redis/redis"
@@ -104,7 +105,8 @@ func CheckLimit(key string, limit int, duration time.Duration, client *redis.Cli
 	return true, nil
 }
 
-func RateLimitCheckShort(key string, limit int, duration time.Duration, client *redis.Client) (bool, error) {
+func RateLimitCheckShort(key string, limit int, duration time.Duration) (bool, error) {
+	client := database.RedisClient
 	res, _ := client.Get(key).Int64()
 	if res > int64(limit) {
 		return false, nil
@@ -118,6 +120,17 @@ func RateLimitCheckShort(key string, limit int, duration time.Duration, client *
 		}
 	}
 	if totalRequests > int64(limit) {
+		return false, nil
+	}
+	return true, nil
+}
+
+func RateLimitCheckShortv1(key string, limit int, duration time.Duration) (bool, error) {
+	client := database.RedisClient
+	client.SetNX(key, 0, duration)
+	client.Incr(key)
+	cnt, _ := client.Get(key).Int()
+	if cnt > limit {
 		return false, nil
 	}
 	return true, nil
