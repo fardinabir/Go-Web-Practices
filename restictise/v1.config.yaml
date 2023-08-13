@@ -1,0 +1,22 @@
+backup:
+  from: /home/pathao/fahim
+  to: s3:http://localhost:9000/restic # /home/pathao/mybackup32
+  key: 1234
+
+init:
+  path: s3:http://localhost:9000/restic # /home/pathao/mybackup32
+  key: 1234
+
+restore:
+  from: s3:http://localhost:9000/restic # /home/pathao/mybackup32
+  to: /
+  key: 1234
+
+snapshots:
+  path: s3:http://localhost:9000/restic # /home/pathao/mybackup32
+  key: 1234
+
+
+#export AWS_ACCESS_KEY_ID=DFgyO9yA6pbxCNawQtSC
+#export AWS_SECRET_ACCESS_KEY=Bz8dXMUsD0afqpKO33xh69DGhXHfyDlmzO5OTH1i
+

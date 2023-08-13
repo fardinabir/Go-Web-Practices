@@ -4,24 +4,23 @@ Copyright © 2023 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"find-a-repo/finders"
 	"github.com/spf13/cobra"
 	"os"
 )
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "find-a-repo",
+	Use:   "find-a-rep",
 	Short: "Simple cli tool for finding related github repo",
 	Long:  `find-a-repo is a lightweight cli tool for finding a suitable repository on the given topic/tool name.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
-	Run: runSearch,
+	//Run: runSearch,
 }
 
-func runSearch(cmd *cobra.Command, args []string) {
-	finders.FindRepos(args)
-}
+//func runSearch(cmd *cobra.Command, args []string) {
+//	finders.FindRepos(args)
+//}
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
@@ -41,5 +40,6 @@ func init() {
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
+	println("Init of root...............")
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

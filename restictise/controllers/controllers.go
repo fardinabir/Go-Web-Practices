@@ -18,13 +18,33 @@ func TakeBackup(args []string) {
 }
 
 func InitRepo(args []string) {
-	path := viper.GetString("init.path")
-	key := viper.GetString("init.key")
-	fmt.Println(path, key)
+	config := GetFromConfig()
 
-	cmdString := fmt.Sprintf("echo %s | echo %s | restic -r %s init", key, key, path)
-	fmt.Println(cmdString)
-	execCmd(cmdString)
+	for _, val := range args {
+		location, ok := config.Locations[val]
+		if !ok {
+			fmt.Println(fmt.Errorf("given location not found in config").Error())
+			return
+		}
+		fmt.Println(location)
+		backendNames := location.To
+
+		var backendList []Backend
+		for _, backendName := range backendNames {
+			if backend, ok := config.Backends[backendName]; ok {
+				fmt.Println(backend)
+				backendList = append(backendList, backend)
+			}
+		}
+
+		newRepo := Repo{
+			Name:        val,
+			From:        location.From,
+			Backends:    backendList,
+			Initialized: false,
+		}
+		newRepo.Init()
+	}
 }
 
 func Snapshots(args []string) {

@@ -25,7 +25,7 @@ func printRepos(result *[]googlesearch.Result, name string) {
 		url := (*result)[i].URL
 		repoUserSuffix := url[19:len(url)]
 		newApiUrl := "https://api.github.com/repos/" + repoUserSuffix
-		fmt.Println(name)
+		fmt.Println(newApiUrl)
 
 		resp, err := http.Get(newApiUrl)
 		if err != nil {

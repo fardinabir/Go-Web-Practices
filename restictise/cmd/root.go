@@ -17,14 +17,15 @@ var rootCmd = &cobra.Command{
 	Long:  `To work with restic in more flexible ways`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
-	//Run: runServe,
+	Run: func(cmd *cobra.Command, args []string) {
+	},
 }
 
 func loadConfig() {
 	viper.SetConfigName(".config")
 	viper.SetConfigType("yaml")
-	viper.AddConfigPath("/home/pathao/go/src/github.com/fardinabir/restictise")
-	//viper.SetConfigFile(".config.yaml")
+	viper.AddConfigPath("./")
+	//viper.SetConfigFile("v1..config.yaml")
 	if err := viper.ReadInConfig(); err != nil {
 		fmt.Println("Error reading config file, ", err)
 	}
