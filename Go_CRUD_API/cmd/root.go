@@ -26,7 +26,7 @@ func runServ(cmd *cobra.Command, args []string) {
 	fmt.Println("This is root cmd")
 	loadFromConfig(cmd)
 	fmt.Println("this is pFlag-Viper", viper.GetString("port"))
-
+	fmt.Println("this is pFlag-Cobra", cmd.Flags().Lookup("port"))
 	portNow, _ := cmd.Flags().GetString("port")
 	server.StartServer(portNow)
 }

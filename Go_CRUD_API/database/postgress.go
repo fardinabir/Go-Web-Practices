@@ -6,11 +6,9 @@ import (
 	"github.com/spf13/viper"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"log"
 )
 
-var DB *gorm.DB
-var err error
+var db *gorm.DB
 
 func loadConfig() string {
 	host := viper.GetString("database.host")
@@ -23,17 +21,29 @@ func loadConfig() string {
 	return dsn
 }
 
-func DatabaseConnection() *gorm.DB {
-	if DB != nil {
-		return DB
-	}
+func GetDBConnection() *gorm.DB {
+	return db
+}
 
+func InitDatabase() error {
+	if db != nil {
+		return nil
+	}
+	var err error
+	db, err = newDBConn()
+	return err
+}
+
+func newDBConn() (*gorm.DB, error) {
 	dsn := loadConfig()
-	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	DB.AutoMigrate(model.User{})
+	newDb, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		log.Fatal("Error connecting to the database...", err)
+		return nil, err
+	}
+	err = newDb.AutoMigrate(model.User{})
+	if err != nil {
+		return nil, err
 	}
 	fmt.Println("Database connection successful...")
-	return DB
+	return newDb, nil
 }

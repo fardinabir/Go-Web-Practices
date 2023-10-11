@@ -2,6 +2,7 @@ package users
 
 import (
 	"Go_CRUD_API/db/repos"
+	"Go_CRUD_API/service"
 	"github.com/go-chi/chi/v5"
 )
 
@@ -16,6 +17,8 @@ func NewResource() *UserResource {
 
 func (rs *UserResource) Router() *chi.Mux {
 	r := chi.NewRouter()
+	r.Use()
+
 	r.Mount("/users", rs.userRouter())
 	r.Post("/login", rs.Login)
 	r.Get("/", rs.HomePage)
@@ -24,7 +27,7 @@ func (rs *UserResource) Router() *chi.Mux {
 
 func (rs *UserResource) userRouter() *chi.Mux {
 	r := chi.NewRouter()
-
+	r.Use(service.NativeApiSecurity)
 	r.Get("/{id:[0-9]+}", rs.ReadUser)
 	r.Get("/", rs.ReadUsers)
 	r.Post("/", rs.CreateUser)

@@ -27,7 +27,7 @@ services:
     volumes:
       - data:/data
     ports:
-      - 55000:6379
+      - "56000:6379"
 volumes:
   dbdata:
   data:

@@ -2,7 +2,6 @@ package users
 
 import (
 	"Go_CRUD_API/controllers"
-	"Go_CRUD_API/database"
 	"Go_CRUD_API/model"
 	"Go_CRUD_API/service"
 	"encoding/json"
@@ -58,15 +57,10 @@ func (rs *UserResource) Login(w http.ResponseWriter, r *http.Request) {
 	log.Print("This is payload", payload)
 
 	// rate limiter using redis
-	rcl, err := database.RedisConnection()
-	if err != nil {
-		controllers.ErrInternalServerError.ErrorResponse().JSONResponse(w)
-		return
-	}
-
-	rateLimitStatus, err := service.RateLimitCheckShort(payload.UserName, 3, time.Second*20, rcl)
+	loginKey := "login" + payload.UserName
+	rateLimitStatus, err := service.CheckRateLimit(loginKey, 3, time.Second*20)
 	if rateLimitStatus == false {
-		fmt.Println("---------------------Found Redis Entry ------------------------")
+		fmt.Println("---------------------Rate Limit Caught------------------------")
 		controllers.ErrTooManyRequest.ErrorResponse().JSONResponse(w)
 		return
 	}

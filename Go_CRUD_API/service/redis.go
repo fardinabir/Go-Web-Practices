@@ -1,137 +1,83 @@
 package service
 
 import (
-	"Go_CRUD_API/database"
-	"errors"
 	"fmt"
 	"github.com/go-redis/redis"
+	"github.com/google/uuid"
+	"github.com/spf13/viper"
+	"strconv"
 	"time"
 )
 
-//func RateLimitPass(userID string, maxRequests int, duration time.Duration, client *redis.Client) bool {
-//	key := "ratelimit:" + userID
-//	now := time.Now().Unix()
-//
-//	pipe := client.TxPipeline()
-//	pipe.ZRemRangeByScore(key, "0", strconv.Itoa(int(time.Now().Unix())))
-//	pipe.ZCard(key)
-//	pipe.ZAdd(key, redis.Z{Score: float64(now), Member: now})
-//	pipe.Expire(key, duration)
-//
-//	_, err := pipe.Exec()
-//	if err != nil {
-//		// Handle error
-//		return false
-//	}
-//
-//	result, err := client.ZCard(key).Result()
-//	if err != nil {
-//		// Handle error
-//		return false
-//	}
-//	fmt.Println(result, "resulttttttttttttttttttttttttt")
-//	return result <= int64(maxRequests)
-//}
+var redisClient *redis.Client
 
-func getTime() (map[string]interface{}, error) {
-	var maxLimit int64
-	var limitTime int64
-	maxLimit = 5
-	limitTime = 60
-	systemUser := "john_doe"
-	uniqueKey := systemUser
-	redisClient := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "",
+func RedisConnection() *redis.Client {
+	if redisClient != nil {
+		return redisClient
+	}
+	_ = InitRedisClient()
+	return redisClient
+}
+
+func InitRedisClient() error {
+	if redisClient != nil {
+		return nil
+	}
+	host := viper.GetString("redis.host")
+	port := viper.GetString("redis.port")
+	//user := viper.GetString("redis.user")
+	password := viper.GetString("redis.password")
+	//dbname := viper.GetString("redis.dbname")
+
+	redisClient = redis.NewClient(&redis.Options{
+		Addr:     host + ":" + port,
+		Password: password,
 		DB:       0,
 	})
-	var counter int64
-	counter, err := redisClient.Get(uniqueKey).Int64()
-	if err == redis.Nil {
-		err = redisClient.Set(uniqueKey, 1, time.Duration(limitTime)*time.Second).Err()
-		if err != nil {
-			return nil, err
-		}
-		counter = 1
-	} else if err != nil {
-		return nil, err
-	} else {
-		if counter >= maxLimit {
-			return nil, errors.New("Limit reached.")
-		}
-		counter, err = redisClient.Incr(uniqueKey).Result()
-		if err != nil {
-			return nil, err
-		}
-	}
-	dt := time.Now()
-	res := map[string]interface{}{
-		"data": dt.Format("2006-01-02 15:04:05"),
-	}
-	return res, nil
-}
-
-func CheckLimit(key string, limit int, duration time.Duration, client *redis.Client) (bool, error) {
-	p := client.Pipeline()
-	incrResult := p.Incr(key)
-	ttlResult := p.TTL(key)
-
-	if _, err := p.Exec(); err != nil {
-		fmt.Println(err, "failed to execute increment to key %v", key)
-		return false, err
-	}
-	totalRequests, err := incrResult.Result()
+	err := redisClient.Ping().Err()
 	if err != nil {
-		fmt.Println(err, "failed to increment key %v", key)
-		return false, err
+		redisClient = nil
+		return err
 	}
-	var ttlDuration time.Duration
-	d, err := ttlResult.Result()
-	if err != nil || d == (-1*time.Second) {
-		ttlDuration = duration
-		if err := client.Expire(key, duration).Err(); err != nil {
-			fmt.Println(err, "failed to set an expiration to key %v", key)
-			return false, err
-		}
-	} else {
-		ttlDuration = d
-	}
-	//expiresAt := time.Now().Add(ttlDuration)
-	requests := uint64(totalRequests)
-	if requests > uint64(limit) {
-		fmt.Println("Limit will be expired in : ", ttlDuration)
-		return false, nil
-	}
-	return true, nil
+	fmt.Println("Redis connection successful...")
+	return nil
 }
 
-func RateLimitCheckShort(key string, limit int, duration time.Duration) (bool, error) {
-	client := database.RedisClient
-	res, _ := client.Get(key).Int64()
-	if res > int64(limit) {
-		return false, nil
+func CheckRateLimit(key string, limit int, duration time.Duration) (bool, error) {
+	if redisClient == nil { // If redis is not found then disable rate limiting
+		return true, nil
 	}
-	incrResult := client.Incr(key)
-	totalRequests, _ := incrResult.Result()
-	if totalRequests == 1 {
-		if err := client.Expire(key, duration).Err(); err != nil {
-			fmt.Println(err, "failed to set an expiration to key %v", key)
-			return false, err
-		}
+	redisClient.SetNX(key, 1, duration)
+	cnt, _ := redisClient.Get(key).Int()
+	if cnt <= limit {
+		redisClient.Incr(key)
+		return true, nil
 	}
-	if totalRequests > int64(limit) {
-		return false, nil
-	}
-	return true, nil
+	return false, nil
 }
 
-func RateLimitCheckShortv1(key string, limit int, duration time.Duration) (bool, error) {
-	client := database.RedisClient
-	client.SetNX(key, 0, duration)
-	client.Incr(key)
-	cnt, _ := client.Get(key).Int()
-	if cnt > limit {
+func CheckRateLimitSliding(key string, limit int, duration time.Duration) (bool, error) {
+	now := time.Now()
+	item := uuid.New()
+
+	client := redisClient
+	minimum := now.Add(-duration)
+
+	// we then remove all requests that have already expired on this set
+	client.ZRemRangeByScore(key, "0", strconv.FormatInt(minimum.UnixMilli(), 10))
+
+	// count how many non-expired requests we have on the sorted set
+	count := client.ZCount(key, "-inf", "+inf")
+	totalRequests, _ := count.Result()
+	if int(totalRequests) >= limit {
 		return false, nil
 	}
+
+	// we add the current request
+	client.ZAdd(key, redis.Z{
+		Score:  float64(now.UnixMilli()),
+		Member: item.String(),
+	})
+
 	return true, nil
 }
